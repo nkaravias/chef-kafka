@@ -1,0 +1,21 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: oel65-chef-java
+
+suites:
+  - name: default
+    data_bags_path: "test/integration/data_bags" 
+    run_list:
+      - recipe[omc_kafka::default]
+    attributes:
+      java:
+         install_flavor: 'oracle'
+         jdk_version: '8'
+         oracle:
+           accept_oracle_download_terms: true

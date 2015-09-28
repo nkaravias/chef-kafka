@@ -1,0 +1,6 @@
+{ 
+ "id": "zookeeper_localdev", 
+ "environment": "localdev",
+ "use": "slapchop",
+ "hosts": [ "default-oel65-chef-java" , "es02" ] 
+}
