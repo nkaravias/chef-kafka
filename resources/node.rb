@@ -11,3 +11,4 @@ attribute :kafka_version, kind_of: String, default: '0.8.2.0'
 attribute :scala_version, kind_of: String, default: '2.10'
 
 attribute :install_path, :kind_of => String, default: '/opt/kafka'
+attribute :log_path, :kind_of => String, default: '/var/log/kafka'
