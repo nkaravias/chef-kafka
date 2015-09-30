@@ -1,3 +1,5 @@
+include Kafka::Kafka_helper
+
 use_inline_resources
 
 def whyrun_supported?
@@ -14,6 +16,7 @@ action :render do
    
   default_sysconfig= new_resource.default_sysconfig.merge!(new_resource.override_sysconfig)
   # After the merge apply global attributes
+  default_sysconfig['KAFKA_LOG_PATH']=new_resource.log_path
   default_sysconfig['KAFKA_HOME']=new_resource.install_path
   # merge all java_opts and set as KAFKA_JVM_PERFOMANCE_OPTS 
   default_sysconfig['KAFKA_JVM_PERFORMANCE_OPTS']=new_resource.java_opts.merge!(new_resource.override_java_opts)
@@ -33,12 +36,7 @@ action :render do
   else
     raise "The required heap options (-Xmx, -Xms, -Xss) did not get  set. Check the java_opts & override_java_opts attributes"
   end 
-  #default_sysconfig['KAFKA_JVM_PERFORMANCE_OPTS'] = jvm_opts
-  # debug
-  #
-  puts "Merged SYSCONFIG values:#{default_sysconfig}\n"
-  #puts "KAFKA_JVM_PERFORMANCE_OPTS"
-  #puts default_sysconfig['KAFKA_JVM_PERFORMANCE_OPTS']
+  #puts "Merged SYSCONFIG values:#{default_sysconfig}\n"
 
   template "Kafka sysconfig parameters" do
     path '/etc/sysconfig/kafka'
@@ -53,18 +51,19 @@ action :render do
     notifies :restart,"service[kafka]"
   end
 
-=begin
-  default_config = new_resource.default_config
-  # Add global attributes
-  default_config['path.log']=new_resource.log_path
+  default_config= new_resource.default_config.merge!(new_resource.override_config)
+  # After the merge apply global attributes
+  default_config['port']= new_resource.listen_port
+  # Set zookeeper.connect string
+  # Parse the databag for the ensemble hosts
+  # If the hash has more than one key - abort
+  ensemble_dbag_key = new_resource.ensemble_data_bag_info.keys.first
+  default_config['zookeeper.connect'] = get_ensemble_string(get_active_host_hash(data_bag_item(ensemble_dbag_key, new_resource.ensemble_data_bag_info[ensemble_dbag_key])),new_resource.zookeeper_client_port)
+  # Set broker.id value - match the node.hostname in the data bag
+  broker_dbag_key = new_resource.broker_data_bag_info.keys.first
+  instance = node.hostname
+  default_config['broker.id'] =  get_broker_id(data_bag_item(broker_dbag_key, new_resource.broker_data_bag_info[broker_dbag_key]),instance)
   
-  merged_configuration = default_config.merge(new_resource.override_config)
-  # Write checks after the merge... to make sure globals aren't overriden...
-=end
-  # debug
-  #puts "Default config values:#{default_config}\n"
-  #puts "Overriden config values:#{new_resource.override_config}\n"
-  #puts "Merged config values:#{merged_configuration}\n"
   template "Kafka configuration" do
     path ::File.join(new_resource.install_path, 'config', 'server.properties')
     source 'config/server.properties.erb'
@@ -73,9 +72,9 @@ action :render do
     mode '0644'
     helpers(Kafka::Kafka_helper)
     cookbook 'omc_kafka'
-    #variables(:config => merged_configuration)
-    #notifies :enable,"service[kafka]"
-    #notifies :restart,"service[kafka]"
+    variables(:config => default_config)
+    notifies :enable,"service[kafka]"
+    notifies :restart,"service[kafka]"
   end
 
   template "Init.d script for kafka" do
@@ -94,11 +93,15 @@ def load_current_resource
   @current_resource.user(@new_resource.user)
   @current_resource.group(@new_resource.group)
   @current_resource.install_path(@new_resource.install_path)
-  #@current_resource.java_opts(@new_resource.java_opts)
+  @current_resource.listen_port(@new_resource.listen_port)
+  @current_resource.ensemble_data_bag_info(@new_resource.ensemble_data_bag_info)
+  @current_resource.broker_data_bag_info(@new_resource.broker_data_bag_info)
+  @current_resource.zookeeper_client_port(@new_resource.zookeeper_client_port)
   @current_resource.java_opts(@new_resource.java_opts)
   @current_resource.override_java_opts(@new_resource.override_java_opts)
   @current_resource.default_config(@new_resource.default_config)
   @current_resource.override_config(@new_resource.override_config)
   @current_resource.default_sysconfig(@new_resource.default_sysconfig)
   @current_resource.override_sysconfig(@new_resource.override_sysconfig)
+  @current_resource.log_path(@new_resource.log_path)
 end

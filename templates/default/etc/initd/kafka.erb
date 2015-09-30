@@ -35,7 +35,7 @@ DESC="Kafka Broker"
 start() {
 
 	echo -n "Starting $DESC" "$prog"
-	daemon --pidfile $PIDFILE "nohup $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties >> /var/log/kafka/startup.log 2>&1 & echo \$! > $PIDFILE"
+	daemon --pidfile $PIDFILE "nohup $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties >> $KAFKA_LOG_PATH/startup.log 2>&1 & echo \$! > $PIDFILE"
 	retval=$?
 	echo
 	[ $retval -eq 0 ] && touch $lockfile

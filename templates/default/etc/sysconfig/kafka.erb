@@ -2,17 +2,15 @@
 # <%= @config %>
 # Static rendering
 <% rendered =[] %>
-# Static rendering
 <%= render(@config, 'KAFKA_HOME', '=','export ') -%><%- rendered << 'KAFKA_HOME' -%>
 export KAFKA_JVM_PERFORMANCE_OPTS="<%=@config['KAFKA_JVM_PERFORMANCE_OPTS'].map{ |k,v| "#{k}#{v}"}.join(' ')%>"<%- rendered << 'KAFKA_JVM_PERFORMANCE_OPTS' -%>
 export KAFKA_HEAP_OPTS="<%=@config['KAFKA_HEAP_OPTS'].map{ |k,v| "#{k}#{v}"}.join(' ')%>"<%- rendered << 'KAFKA_HEAP_OPTS' -%>
-<%= render(@config, 'JMX_PORT', '=','export ') -%><%- rendered << 'JMX_PORT' -%>
 <%= render(@config, 'JMX_PORT', '=','export ') -%><%- rendered << 'JMX_PORT' -%>
 
 #export KAFKA_HOME=/opt/kafka
 # Dynamic rendering
 <% @config.each do |k,v| %>
   <% unless rendered.include?(k) %>
-#<%= render(@config, k) -%>
+<%= render(@config, k, '=', 'export ') -%>
   <% end %>
 <% end %>
