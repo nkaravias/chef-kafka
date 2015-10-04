@@ -14,12 +14,12 @@ action :render do
 =begin
 =end
    
-  default_sysconfig= new_resource.default_sysconfig.merge!(new_resource.override_sysconfig)
+  default_sysconfig= new_resource.default_sysconfig.merge(new_resource.override_sysconfig)
   # After the merge apply global attributes
   default_sysconfig['KAFKA_LOG_PATH']=new_resource.log_path
   default_sysconfig['KAFKA_HOME']=new_resource.install_path
   # merge all java_opts and set as KAFKA_JVM_PERFOMANCE_OPTS 
-  default_sysconfig['KAFKA_JVM_PERFORMANCE_OPTS']=new_resource.java_opts.merge!(new_resource.override_java_opts)
+  default_sysconfig['KAFKA_JVM_PERFORMANCE_OPTS']=new_resource.java_opts.merge(new_resource.override_java_opts)
   jvm_opts = default_sysconfig['KAFKA_JVM_PERFORMANCE_OPTS']
   # HEAP_OPTS is generated from JAVA_OPTS['-Xmx'] & JAVA_OPTS['-Xms'] & JAVA_OPTS['-Xss']
   # If any of those keys has been overriden and is nil or has a nil value - raise an exception
@@ -51,7 +51,7 @@ action :render do
     notifies :restart,"service[kafka]"
   end
 
-  default_config= new_resource.default_config.merge!(new_resource.override_config)
+  default_config= new_resource.default_config.merge(new_resource.override_config)
   # After the merge apply global attributes
   default_config['port']= new_resource.listen_port
   # Set zookeeper.connect string

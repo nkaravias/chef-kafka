@@ -8,7 +8,7 @@ attribute :install_path, :kind_of => String, default: '/opt/kafka'
 attribute :log_path, :kind_of => String, default: '/var/log/kafka'
 
 attribute :listen_port, :kind_of => Integer, default: 9092
-attribute :zookeeper_client_port, :kind_of => String, default: '2181'
+attribute :zookeeper_client_port, :kind_of => Integer, default: 2181
 attribute(:ensemble_data_bag_info, kind_of: Hash,   required: true)
 attribute(:broker_data_bag_info, kind_of: Hash,   required: true)
 # Default JVM options
@@ -37,7 +37,7 @@ attribute(:default_sysconfig, kind_of: Hash, default: {
 # Override
 attribute(:override_sysconfig, kind_of: Hash, default: {})
 
-### General configuration attributes for ES
+### General configuration attributes for kafka
 # Default
 attribute(:default_config, kind_of: Hash, default: {
   'num.network.threads' => 3,
