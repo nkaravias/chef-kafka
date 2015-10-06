@@ -11,8 +11,6 @@ action :render do
     supports :restart => true, :start => true, :stop => true, :reload => true
     action :nothing
   end
-=begin
-=end
    
   default_sysconfig= new_resource.default_sysconfig.merge(new_resource.override_sysconfig)
   # After the merge apply global attributes
@@ -36,7 +34,6 @@ action :render do
   else
     raise "The required heap options (-Xmx, -Xms, -Xss) did not get  set. Check the java_opts & override_java_opts attributes"
   end 
-  #puts "Merged SYSCONFIG values:#{default_sysconfig}\n"
 
   template "Kafka sysconfig parameters" do
     path '/etc/sysconfig/kafka'
@@ -61,7 +58,7 @@ action :render do
   default_config['zookeeper.connect'] = get_ensemble_string(get_active_host_hash(data_bag_item(ensemble_dbag_key, new_resource.ensemble_data_bag_info[ensemble_dbag_key])),new_resource.zookeeper_client_port)
   # Set broker.id value - match the node.hostname in the data bag
   broker_dbag_key = new_resource.broker_data_bag_info.keys.first
-  instance = node.hostname
+  instance = node.fqdn
   default_config['broker.id'] =  get_broker_id(data_bag_item(broker_dbag_key, new_resource.broker_data_bag_info[broker_dbag_key]),instance)
   
   template "Kafka configuration" do
