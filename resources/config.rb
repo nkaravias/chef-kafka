@@ -16,14 +16,15 @@ attribute(:java_opts, kind_of: Hash, default: {
 '-Xmx' => '512m',
 '-Xms' => '256m',
 '-Xss' => '256k',
-'-server' => '',
 '-Djava.awt.headless='=>true,
 '-XX:+CMSClassUnloadingEnabled' => '',
 '-XX:+CMSScavengeBeforeRemark' => '',
 '-XX:+DisableExplicitGC' => '',
 '-XX:+UseG1GC' => '',
 '-XX:MaxGCPauseMillis=' => '20',
-'-XX:InitiatingHeapOccupancyPercent=' => '35'
+'-XX:InitiatingHeapOccupancyPercent=' => '35',
+'-Djava.net.preferIPv4Stack=' => true,
+'-Dfile.encoding=' => 'UTF-8'
 })
 # Override
 attribute(:override_java_opts, kind_of: Hash, default: {})
