@@ -1,0 +1,40 @@
+---
+driver:
+  name: docker
+
+driver_config:
+  sudo: false
+  use_sudo: false
+  require_chef_omnibus: 11.16.4
+  image: oracle/oel67:1.0
+  http_proxy: http://www-proxy.us.oracle.com:80
+  https_proxy: http://www-proxy.us.oracle.com:80
+
+provisioner:
+  name: chef_zero
+  use_sudo: false
+  environments_path: "test/integration/environments"
+  client_rb:
+    environment: localdev
+    http_proxy: http://den00bjg.us.oracle.com:8123
+    https_proxy: http://den00bjg.us.oracle.com:8123
+    no_proxy: localhost,127.0.0.1
+
+platforms:
+- name: oel
+  driver_config:
+    sudo: false
+    use_sudo: false
+    require_chef_omnibus: 11.16.4
+    image: oracle/oel67:1.0
+    platform: rhel
+    forward:
+      - 9092:9092
+      - 2181:2181
+
+suites:
+  - name: default
+    data_bags_path: "test/integration/data_bags"
+    run_list:
+      - recipe[omc_zookeeper_test::default]
+      - recipe[omc_kafka_test::default]

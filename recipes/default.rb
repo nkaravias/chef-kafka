@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-
+=begin
 omc_kafka_node 'kafka' do
   #user 'kafka'
   #group 'kafka'
@@ -37,3 +37,4 @@ omc_kafka_config 'kafka' do
   override_config  {}
   action :render
 end
+=end
