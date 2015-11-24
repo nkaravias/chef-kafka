@@ -51,6 +51,7 @@ action :render do
   default_config= new_resource.default_config.merge(new_resource.override_config)
   # After the merge apply global attributes
   default_config['port']= new_resource.listen_port
+  default_config['log.dirs']= new_resource.data_path
   # Set zookeeper.connect string
   # Parse the databag for the ensemble hosts
   # If the hash has more than one key - abort

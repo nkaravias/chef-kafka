@@ -6,6 +6,7 @@ attribute :group, :kind_of => String, default: 'kafka'
 
 attribute :install_path, :kind_of => String, default: '/opt/kafka'
 attribute :log_path, :kind_of => String, default: '/var/log/kafka'
+attribute :data_path, :kind_of => String, default: '/scratch/kafka/logs'
 
 attribute :listen_port, :kind_of => Integer, default: 9092
 attribute :zookeeper_client_port, :kind_of => Integer, default: 2181

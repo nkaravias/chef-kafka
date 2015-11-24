@@ -40,6 +40,7 @@
         "scala_version": "2.10",
         "install_path": "/opt/kafka",
         "log_path": "/var/log/kafka",
+        "data_path": "/scratch/kafka/logs",
         "broker_data_bag_info": {
           "slapchop": "kafka_localdev"
         },
