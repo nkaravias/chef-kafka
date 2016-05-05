@@ -4,13 +4,28 @@ driver:
 
 provisioner:
   name: chef_zero
-  require_chef_omnibus: 11.16.4
+#  require_chef_omnibus: 11.16.4
   environments_path: "test/integration/environments"
   client_rb:
     environment: localdev
 
 platforms:
-  - name: oel65-chef-java
+  - name: chef11
+    driver:
+      vm_hostname: default-oel65-chef-java
+      box: oel65-chef-java
+    provisioner:
+      require_chef_omnibus: 11.16.4
+  - name: chef12
+    driver:
+      vm_hostname: default-oel65-chef-java
+      box: oel65-chef-java
+    provisioner:
+      require_chef_omnibus: 12.12.15
+
+
+
+
 
 suites:
   - name: default
@@ -18,37 +33,3 @@ suites:
     run_list:
       - recipe[omc_zookeeper_test::default]
       - recipe[omc_kafka_test::default]
-#    attributes:
-#      java:
-#         install_flavor: 'oracle'
-#         jdk_version: '8'
-#         oracle:
-#           accept_oracle_download_terms: true
-#      omc_zookeeper:
-#        home: '/opt/zk_home'
-#        source_url: 'http://www.us.apache.org/dist/zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz'
-#        version: '3.4.6'
-#        install_path: '/opt/zookeeper'
-#        data_path: '/data/zookeeper/data'
-#        log_path: '/var/log/zookeeper'
-#        config_path: '/opt/zookeeper/conf'
-#        ensemble_data_bag_info:
-#          slapchop: 'zookeeper_localdev'
-#        client_port: 2182,
-#        quorum_port: 2888,
-#        leader_port: 3888,
-#        service_name: 'zookeeper'
-#        override_config: {}
-#      omc_kafka:
-#        home: '/opt/kafka_home'
-#        source_url: 'http://www.mirrorservice.org/sites/ftp.apache.org/kafka/0.8.2.0/kafka_2.10-0.8.2.0.tgz'
-#        kafka_version: '0.8.2.0'
-#        scala_version: '2.10'
-#        install_path: '/opt/kafka'
-#        log_path: '/var/log/kafka'
-#        listen_port: 9092
-#        broker_data_bag_info:
-#          slapchop: 'kafka_localdev'
-#        override_java_opts: {}
-#        override_sysconfig: {}
-#        override_config: {}

@@ -47,11 +47,22 @@
         "listen_port": 9092,
         "override_java_opts": {},
         "override_sysconfig": {},
-        "override_config": {}
- }
-  },
-  "override_attributes": {
-
-  }
+        "override_config": {},
+        "topics": [
+        {
+          "name": "contact_topic",
+          "replication_factor": 1,
+          "partitions": 2
+        },
+        {
+          "name": "test_topic",
+          "replication_factor": 1,
+          "partitions": 3
+        }
+       ]
+    }
+    },
+    "override_attributes": {
+    }
 }
 

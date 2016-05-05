@@ -1,6 +1,9 @@
 module Kafka
   module Kafka_helper
     
+  require 'mixlib/shellout'
+
+
     def kafka_installed?(path, version)
       install_flag = ::File.join(path, "kafka_#{version}.jar")
       ::File.exist?(install_flag)
@@ -45,6 +48,19 @@ module Kafka
         raise "Unable to find an entry for hostname: #{instance} in data bag 'hosts' section: #{hosts}"
       end
     end
-   
+
+  def topic_exists?(kafka_home, zookeeper, topic)
+     kafka_cmd=::File.join(kafka_home,'bin','kafka-topics.sh')
+     cmd = Mixlib::ShellOut.new("#{kafka_cmd} --zookeeper #{zookeeper} --list").run_command
+     stdout = cmd.stdout.empty? ? "WARN: No return output for kafka-topics --list" : cmd.stdout
+     raise "Error checking for topic #{topic}: stderr=#{cmd.stderr}" unless cmd.stderr.empty?
+     unless cmd.stdout.split("\n").include? topic
+       puts "Topic #{topic} doesn't exist"
+       return false
+     end
+     puts "Topic #{topic} exists"
+     return true
+  end 
+
   end
 end

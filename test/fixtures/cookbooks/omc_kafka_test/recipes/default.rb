@@ -20,3 +20,14 @@ omc_kafka_config 'kafka' do
   override_config node[:omc_kafka][:override_config]
   action :render
 end
+
+node[:omc_kafka][:topics].each do |topic|
+  omc_kafka_topic topic['name'] do
+    user node[:omc_kafka][:user]
+    install_path node[:omc_kafka][:install_path]
+    zookeeper_client_port node[:omc_zookeeper][:client_port]
+    ensemble_data_bag_info node[:omc_zookeeper][:ensemble_data_bag_info]
+    partitions topic['partitions']
+    replication_factor topic['replication_factor']
+  end
+end
